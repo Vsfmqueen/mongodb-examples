@@ -1,7 +1,11 @@
+import com.mongodb.*;
+
+import java.util.ArrayList;
+
 /**
  * Created by Vera_Sidarovich on 10/23/2014.
  */
-*/
+
 public class Homework1 {
     public static void main(String... args) throws Exception {
         Mongo mongo = new Mongo("localhost", 27017);
@@ -32,9 +36,6 @@ public class Homework1 {
             DBObject object = students.find(matchObject).sort(new BasicDBObject("score", 1)).limit(1).next();
 
             students.remove(object);
-
         }
-
-
     }
 }
