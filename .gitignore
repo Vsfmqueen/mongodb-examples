@@ -1,0 +1,6 @@
+.git
+.idea
+lib/
+/.idea
+/*.iml
+/out
