@@ -9,7 +9,7 @@ public class Homework2 {
         DB school = mongo.getDB("school");
         DBCollection students = school.getCollection("students");
 
-    //    db.students.aggregate({$match: {"_id":0}}, {$unwind : "$scores"}, {$match: {"scores.type":"homework"}}, {$sort: {"scores.score" :1}}, {$limit :1}  )
+        //    db.students.aggregate( {$match : {"_id": new NumberLong(0)}},{$unwind : "$scores"},{$match : {"scores.type": "homework"}},{$sort: {"scores.score": 1}},{$limit: 1})
 
         DBObject unwindObject = new BasicDBObject("$unwind", "$scores");
         DBObject matchScoresObject = new BasicDBObject("$match", new BasicDBObject("scores.type", "homework"));
@@ -19,24 +19,20 @@ public class Homework2 {
         DBCursor result = students.find();
 
 
-        while(result.hasNext()){
+        while (result.hasNext()) {
             DBObject studentObject = result.next();
             Object idValue = studentObject.get("_id");
 
             DBObject matchObject = new BasicDBObject("$match", new BasicDBObject("_id", idValue));
 
             AggregationOutput output = students.aggregate(matchObject, unwindObject, matchScoresObject, sortObject, limitObject);
-            Iterable<DBObject> results= output.results();
+            Iterable<DBObject> results = output.results();
 
 
             for (DBObject homework : results) {
                 BasicDBObject pullObject = new BasicDBObject("$pull", new BasicDBObject("scores", homework.get("scores")));
-              //  BasicDBObject pullObject = new BasicDBObject("$pull", homework);
                 students.update(studentObject, pullObject);
             }
         }
-
-
-
     }
 }
